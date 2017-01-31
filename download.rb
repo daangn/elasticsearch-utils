@@ -23,7 +23,7 @@ def download(url, path)
 end
 
 if __FILE__ == $0
-  require './environment'
+  require "#{File.expand_path(File.dirname(__FILE__))}/environment"
   url = ENV['dict_url']
   path = ENV['dict_path']
 
