@@ -29,5 +29,6 @@ if __FILE__ == $0
 
   if last_modified_time(path) < last_modified_time(url)
     download url, path
+    puts "#{path} downloaded"
   end
 end
