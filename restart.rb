@@ -55,6 +55,10 @@ def restart
     exit
   end
 
+  if running_nodes.count > 1
+    abort "still restarting. try again after some minutes"
+  end
+
   running_node = running_nodes.first.to_i
 
   running_nodes[1..-1].each do |i|
