@@ -22,13 +22,17 @@ def download(url, path)
   `curl -o #{path} #{url}`
 end
 
-if __FILE__ == $0
-  require "#{File.expand_path(File.dirname(__FILE__))}/environment"
-  url = ENV['dict_url']
-  path = ENV['dict_path']
-
+def download_if_updated(url, path)
   if last_modified_time(path) < last_modified_time(url)
     download url, path
+
+    # 다른 프로그램에서 확인하기 위해 다운로드 했을 때 출력
     puts "#{path} downloaded"
   end
+end
+
+if __FILE__ == $0
+  require "#{File.expand_path(File.dirname(__FILE__))}/environment"
+  download_if_updated(ENV['dict_url'], ENV['dict_path'])
+  download_if_updated(ENV['synonym_url'], ENV['synonym_path'])
 end
