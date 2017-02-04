@@ -12,8 +12,8 @@ end
 
 def wait_cluster_health_green
   puts 'Check cluster health is green'
-  delay_seconds = 2
-  max_time = 60 * 5
+  delay_seconds = 5
+  max_time = 60 * 20
   count = max_time / delay_seconds
   (0...count).each do |i|
     health = cluster_health()
