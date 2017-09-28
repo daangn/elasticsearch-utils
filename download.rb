@@ -2,20 +2,21 @@
 require 'net/http'
 require 'time'
 
-def last_modified_time(url)
+def file_info(url)
   uri = URI(url)
   path = uri.path
 
   if uri.scheme.nil?
     return Time.at(0) unless File.exists?(path)
-    return File.mtime(path)
+    return {mtime: File.mtime(path), size: File.size(path)}
   end
 
-  time_str = Net::HTTP.start(uri.host, uri.port, use_ssl: true) do |http|
+  info = Net::HTTP.start(uri.host, uri.port, use_ssl: true) do |http|
     response = http.head(path)
-    response['Last-Modified']
+    {mtime: response['Last-Modified'], size: response['Content-Length'].to_i}
   end
-  Time.parse time_str
+  info[:mtime] = Time.parse info[:mtime]
+  info
 end
 
 def download(url, path)
@@ -23,7 +24,9 @@ def download(url, path)
 end
 
 def download_if_updated(url, path)
-  if last_modified_time(path) < last_modified_time(url)
+  local_info = file_info(path)
+  remote_info = file_info(url)
+  if local_info[:mtime] < remote_info[:mtime] || local_info[:size] != remote_info[:size]
     download url, path
 
     # 다른 프로그램에서 확인하기 위해 다운로드 했을 때 출력
