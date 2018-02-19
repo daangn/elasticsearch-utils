@@ -9,8 +9,5 @@ if [ -z $DOWNLOADED ]; then
   exit 0
 fi
 
-cd /opt/mecab-ko-dic-2.0.1-20150920 && \
-  tools/add-userdic.sh && \
-  $DIR/replace.sh user-servicecustom.csv && \
-  make clean all && make install
+$DIR/install.sh
 $DIR/restart.rb
